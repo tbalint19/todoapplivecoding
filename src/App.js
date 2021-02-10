@@ -1,42 +1,28 @@
 import { useState } from 'react'
+import Dashboard from './components/Dashboard'
+import { withRename } from './producers/withRename'
+import { withNewDashboard } from './producers/withNewDashboard'
+import { withoutDashboard } from './producers/withoutDashboard'
 import './App.css';
 
-const initialState = [
-  {
-    id: 1,
-    title: "Lajos bevásárlólistája",
-    todos: [
-      { id: 2, title: "Aldi", description: "Tej, kenyér"},
-      { id: 3, title: "Lidl", description: "Hús"},
-    ]
-  },
-  {
-    id: 4,
-    title: "Béla bevásárlólistája",
-    todos: [
-      { id: 5, title: "CBA", description: "Alma, Banán"},
-    ]
-  },
-]
+import { initialState } from './dummyState'
 
-function App() {
+const App = () => {
 
   const [ dashboards, setDashboards ] = useState(initialState)
   const [ dashboardInput, setDashboardInput ] = useState("")
 
-  const deleteDashboard = (id) => {
-    const newDashboards = dashboards.filter(dashboard => dashboard.id !== id)
-    setDashboards(newDashboards)
+  const createDashboard = () => {
+    setDashboards(withNewDashboard(dashboards, dashboardInput))
+    setDashboardInput("")
   }
 
-  const createDashboard = () => {
-    const newDashboards = [ ...dashboards, {
-      id: new Date().getTime(),
-      title: dashboardInput,
-      todos: []
-    } ]
-    setDashboards(newDashboards)
-    setDashboardInput("")
+  const renameDashboard = (id, newTitle) => {
+    setDashboards(withRename(dashboards, id, newTitle))
+  }
+
+  const deleteDashboard = (id) => {
+    setDashboards(withoutDashboard(dashboards, id))
   }
 
   return (
@@ -47,16 +33,11 @@ function App() {
       </nav>
       <main>
         { dashboards.map(dashboard =>
-          <section key={dashboard.id}>
-            <h2>{ dashboard.title }</h2>
-            { dashboard.todos.map(todo =>
-              <article key={todo.id}>
-                <h3>{ todo.title }</h3>
-                <p>{ todo.description }</p>
-              </article>
-            ) }
-            <button onClick={() => deleteDashboard(dashboard.id)}>Delete</button>
-          </section>
+          <Dashboard
+            key={dashboard.id}
+            dashboard={dashboard}
+            renameDashboard={renameDashboard}
+            deleteDashboard={deleteDashboard} />
         ) }
       </main>
     </div>
