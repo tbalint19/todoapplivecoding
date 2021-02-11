@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { withNewDashboard } from './producers/withNewDashboard'
 
 test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const base = [
+    { id: 1, title: "1d", todos: [ { id: 1, title: "1t", description: "1d"}]}
+  ]
+  const nextState = withNewDashboard(base)
+  expect(next).toBe();
 });

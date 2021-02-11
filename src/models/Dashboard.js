@@ -1,7 +1,8 @@
-export default class Dashboard {
+import BaseModel from './BaseModel'
+
+export default class Dashboard extends BaseModel {
   constructor(title) {
-    this.id = new Date().getTime()
-    this.title = title
+    super(title)
     this.todos = []
   }
 }
